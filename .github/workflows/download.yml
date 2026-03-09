@@ -6,11 +6,11 @@ jobs:
     steps:
       - name: Pull and Save Image
         run: |
-          docker login registry.example.com
-          docker pull vllm-ascend:v0.13
-          docker save vllm-ascend:v0.13 -o vllm_ascend_v0.13.tar
+
+          docker pull vllm-ascend:v0.11
+          docker save vllm-ascend:v0.11 -o vllm_ascend_v0.11.tar
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: docker-image
-          path: vllm_ascend_v0.13.tar
+          path: vllm_ascend_v0.11.tar
