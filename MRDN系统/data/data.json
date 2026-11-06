@@ -1,0 +1,304 @@
+{
+  "version": 1,
+  "appName": "MRDN 系统",
+  "flows": [
+    {
+      "id": "f1",
+      "name": "订单数据导出",
+      "icon": "📦",
+      "color": "#5b6cff",
+      "goal": "把订单系统数据导出 → 用工具清洗 → 再回传系统，一条龙搞定。",
+      "steps": [
+        {
+          "id": "N001",
+          "seq": 1,
+          "name": "登录订单系统",
+          "desc": "打开订单系统网址，输入账号密码，点「登录」。",
+          "input": {
+            "text": "账号、密码",
+            "items": [],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "登录成功，进入订单首页",
+            "files": [],
+            "results": []
+          },
+          "note": "账号密码已存浏览器，直接点登录即可。",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "execMode": "single"
+        },
+        {
+          "id": "N002",
+          "seq": 2,
+          "name": "筛选本月订单",
+          "desc": "1. 进入「订单查询」页\n2. 时间范围选「本月」\n3. 状态选「已完成」\n4. 点「查询」",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "in_ref_N001",
+                "name": "登录订单系统",
+                "required": false,
+                "kind": "node",
+                "file": null,
+                "refId": "N001",
+                "refLabel": "登录订单系统"
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "本月已完成订单列表（约 320 条）",
+            "files": [],
+            "results": []
+          },
+          "note": "时区选「北京时间」，否则会漏单。",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "execMode": "single"
+        },
+        {
+          "id": "N003",
+          "seq": 3,
+          "name": "导出订单表",
+          "desc": "点右上角「导出 Excel」，选「全部字段」，下载到本地。",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "in_ref_N002",
+                "name": "筛选本月订单",
+                "required": false,
+                "kind": "node",
+                "file": null,
+                "refId": "N002",
+                "refLabel": "筛选本月订单"
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "原始订单表 order_20261013.xlsx",
+            "files": [],
+            "results": []
+          },
+          "note": "文件名自动带日期，别改。",
+          "screenshot": null,
+          "tool": null,
+          "files": [
+            {
+              "name": "order_20261013.xlsx"
+            }
+          ],
+          "execMode": "single"
+        },
+        {
+          "id": "N004",
+          "seq": 4,
+          "name": "工具清洗数据",
+          "desc": "运行清洗工具，自动去重、格式化日期、剔除空行。",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "in_ref_N003",
+                "name": "导出订单表",
+                "required": false,
+                "kind": "node",
+                "file": null,
+                "refId": "N003",
+                "refLabel": "导出订单表"
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "清洗后 cleaned_20261013.xlsx",
+            "files": [],
+            "results": []
+          },
+          "note": "工具在 tools 文件夹，运行前先确认输入文件路径正确。",
+          "screenshot": null,
+          "tool": {
+            "name": "clean_data.exe"
+          },
+          "files": [
+            {
+              "name": "cleaned_20261013.xlsx"
+            }
+          ],
+          "execMode": "batch"
+        },
+        {
+          "id": "N005",
+          "seq": 5,
+          "name": "回传清洗结果",
+          "desc": "回到订单系统，进入「批量导入」，上传清洗结果，点「确认导入」。",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "in_ref_N004",
+                "name": "工具清洗数据",
+                "required": false,
+                "kind": "node",
+                "file": null,
+                "refId": "N004",
+                "refLabel": "工具清洗数据"
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "系统提示「导入成功：320 条」",
+            "files": [],
+            "results": []
+          },
+          "note": "导入前会弹二次确认，看清条数再点确认。",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "execMode": "batch"
+        }
+      ],
+      "progress": {
+        "done": []
+      },
+      "checklist": [],
+      "batches": [],
+      "workItems": []
+    },
+    {
+      "id": "f2",
+      "name": "日报发送",
+      "icon": "📊",
+      "color": "#06b6d4",
+      "goal": "每天汇总订单数据，整理成日报并发邮件给团队。",
+      "steps": [
+        {
+          "id": "N006",
+          "seq": 1,
+          "name": "整理日报数据",
+          "desc": "汇总当天订单量、异常单，填进日报模板。",
+          "input": {
+            "text": "当天订单记录",
+            "items": [],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "日报 Excel 一份",
+            "files": [],
+            "results": []
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "execMode": "single"
+        },
+        {
+          "id": "N007",
+          "seq": 2,
+          "name": "发送日报邮件",
+          "desc": "用 Outlook 把日报发给团队群组。",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "in_ref_N006",
+                "name": "整理日报数据",
+                "required": false,
+                "kind": "node",
+                "file": null,
+                "refId": "N006",
+                "refLabel": "整理日报数据"
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "邮件已发送",
+            "files": [],
+            "results": []
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "execMode": "single"
+        }
+      ],
+      "progress": {
+        "done": []
+      },
+      "checklist": [],
+      "batches": [],
+      "workItems": []
+    },
+    {
+      "id": "f3",
+      "name": "客户信息维护",
+      "icon": "👥",
+      "color": "#10b981",
+      "goal": "统一维护客户资料，新增或修改都有章可循。",
+      "steps": [
+        {
+          "id": "N008",
+          "seq": 1,
+          "name": "新增客户",
+          "desc": "进入客户管理，点「新增」，填写客户名称、联系方式。",
+          "input": {
+            "text": "客户名称、联系方式",
+            "items": [],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "客户建档成功",
+            "files": [],
+            "results": []
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "execMode": "single"
+        }
+      ],
+      "progress": {
+        "done": []
+      },
+      "checklist": [],
+      "batches": [],
+      "workItems": []
+    }
+  ],
+  "tags": [
+    {
+      "id": "data",
+      "name": "数据处理",
+      "icon": "📊"
+    },
+    {
+      "id": "web",
+      "name": "网页操作",
+      "icon": "🌐"
+    },
+    {
+      "id": "notify",
+      "name": "消息/邮件告知",
+      "icon": "📧"
+    }
+  ]
+}
