@@ -1,0 +1,22 @@
+# ---- MRDN系统 仓库忽略规则（安全红线） ----
+
+# 运行时数据目录（真实 Cookie、业务 Excel 永不入库；mock 示例在 mock_data/）
+data/
+
+# 打包/构建产物
+build/
+dist/
+_backups/
+__pycache__/
+*.pyc
+*.pyo
+
+# 工具 exe 与本地配置（onebox_config.json 含明文密码，只有 .example 进仓库）
+tools/*.exe
+tools/onebox_config.json
+update_config.json
+
+# 系统垃圾
+Thumbs.db
+desktop.ini
+~$*
