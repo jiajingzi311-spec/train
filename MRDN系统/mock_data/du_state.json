@@ -1,0 +1,46 @@
+{
+ "fMOCK001|WMOCK01": {
+  "duid": "MOCKDU01_WL",
+  "materials": [
+   {
+    "itemcode": "99000001",
+    "desc": "99000001 : mock auxiliary kit",
+    "qty": "1",
+    "type": "Type 3",
+    "sitestype": "",
+    "project": "",
+    "fromItemcode": "",
+    "fromType": "",
+    "status": "",
+    "remark": "",
+    "done": true
+   },
+   {
+    "itemcode": "99000002",
+    "desc": "99000002 : mock power module",
+    "qty": "1",
+    "type": "Type 1",
+    "sitestype": "",
+    "project": "",
+    "fromItemcode": "",
+    "fromType": "",
+    "status": "",
+    "remark": "",
+    "done": true
+   },
+   {
+    "itemcode": "99000003",
+    "desc": "99000003 : 16mm mock grounding",
+    "qty": "24",
+    "type": "Type 2",
+    "sitestype": "",
+    "project": "",
+    "fromItemcode": "",
+    "fromType": "",
+    "status": "缺料",
+    "remark": "mock",
+    "done": false
+   }
+  ]
+ }
+}

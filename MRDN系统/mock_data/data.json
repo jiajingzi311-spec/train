@@ -1,0 +1,1845 @@
+{
+  "version": 1,
+  "appName": "MRDN 系统",
+  "tags": [
+    {
+      "id": "data",
+      "name": "数据处理",
+      "icon": "📊"
+    },
+    {
+      "id": "web",
+      "name": "网页操作",
+      "icon": "🌐"
+    },
+    {
+      "id": "notify",
+      "name": "消息/邮件告知",
+      "icon": "📧"
+    }
+  ],
+  "flows": [
+    {
+      "id": "fMOCK001",
+      "name": "MRDN",
+      "icon": "📌",
+      "color": "#5b6cff",
+      "goal": "（mock 示例）完整业务流：需求分析 → 物料清单 → 发包/余量 → 挑料 → 完结。",
+      "steps": [
+        {
+          "name": "需求分析",
+          "brief": "将客户发布的需求进行分析，整理出对应的项目类型、仓库等",
+          "desc": "确定后续使用的项目、合同类型、仓库信息",
+          "input": {
+            "text": "输入DUID清单和需求邮件",
+            "items": [
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "DU信息表",
+            "files": [
+              {
+                "id": "out_1793593465210_586",
+                "name": "输出结果.xlsx",
+                "path": "inputs/输出结果.xlsx"
+              }
+            ],
+            "results": [
+              {
+                "name": "输出结果.xlsx",
+                "rel": "outputs/MRDNDU分析_20261110_112834_868748/输出结果.xlsx"
+              }
+            ]
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": {
+            "name": "MRDNDU分析.exe",
+            "config": [
+              {
+                "id": "du_list",
+                "itemId": "__duid_list__"
+              },
+              {
+                "id": "output_template",
+                "itemId": "out_1793593465210_586"
+              }
+            ]
+          },
+          "files": [],
+          "tag": "data",
+          "urls": [],
+          "steps": [
+            {
+              "text": "确定后续使用的项目、合同类型、仓库信息",
+              "shot": null
+            }
+          ],
+          "execMode": "batch",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "anchor": null,
+          "id": "N009",
+          "seq": 1
+        },
+        {
+          "name": "物料清单制作",
+          "brief": "根据上游设计方（MBB团队）提供的表格进行转置，生成可用于作业的物料清单表",
+          "desc": "物料设计表使用透视的方式进行转置生成物料清单\n对物料清单做类型转换\n对部分物料进行替换（老员工经验，避免当前物料缺料导致的后续无意义操作）",
+          "input": {
+            "text": "根据物料设计文档，进行转置，形成可用的物料任务清单",
+            "items": [
+              {
+                "id": "in_1792080446538_410",
+                "name": "物料设计文档",
+                "required": true,
+                "kind": "checklist",
+                "refId": "C312688",
+                "refLabel": "物料设计文档"
+              },
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              },
+              {
+                "id": "in_1793592712340_490",
+                "name": "DU分析表",
+                "required": true,
+                "kind": "node",
+                "refId": "N009",
+                "refLabel": "需求分析",
+                "refFile": null
+              },
+              {
+                "id": "in_1793780676714_355",
+                "name": "物料类型表",
+                "required": true,
+                "kind": "checklist",
+                "refId": "C349413",
+                "refLabel": "物料类型表"
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "DU下对应的物料编码，数量，类型较为清晰、可用的物料清单",
+            "files": [
+              {
+                "id": "out_1792469145005_92",
+                "name": "物料转置输出模板.xlsx",
+                "path": "inputs/物料转置输出模板.xlsx"
+              }
+            ],
+            "results": [
+              {
+                "name": "输出结果.xlsx",
+                "rel": "outputs/MRDN物料转置_20261110_112842_086876/输出结果.xlsx"
+              }
+            ]
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": {
+            "name": "MRDN物料转置.exe",
+            "config": [
+              {
+                "id": "input_template",
+                "itemId": "in_1792080446538_410"
+              },
+              {
+                "id": "output_template",
+                "itemId": "out_1792469145005_92"
+              },
+              {
+                "id": "type_table",
+                "itemId": "in_1793780676714_355"
+              },
+              {
+                "id": "du_list",
+                "itemId": "__duid_list__"
+              },
+              {
+                "id": "du_analy",
+                "itemId": "in_1793592712340_490"
+              }
+            ]
+          },
+          "files": [],
+          "tag": "data",
+          "urls": [],
+          "steps": [
+            {
+              "text": "物料设计表使用透视的方式进行转置生成物料清单",
+              "shot": null
+            },
+            {
+              "text": "对物料清单做类型转换",
+              "shot": null
+            },
+            {
+              "text": "对部分物料进行替换（老员工经验，避免当前物料缺料导致的后续无意义操作）",
+              "shot": null
+            }
+          ],
+          "execMode": "single",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "anchor": {
+            "file": "",
+            "columns": [
+              "SiteStype",
+              "可用项目合同",
+              "itemcode",
+              "qty",
+              "type",
+              "替换前类型",
+              "Date ready for configuration",
+              "project",
+              "desc",
+              "project",
+              "desc",
+              "project",
+              "desc",
+              "project",
+              "desc",
+              "project",
+              "desc",
+              "project",
+              "desc",
+              "project",
+              "desc",
+              "project",
+              "desc",
+              "project",
+              "desc"
+            ]
+          },
+          "id": "N010",
+          "seq": 2
+        },
+        {
+          "name": "辅料包配置",
+          "brief": "查看已经处理好的物料清单，筛选出需要发辅料包的数据，按照CPQ Spart模板生成可直接上传的文件，如需要发包数据为空，则可跳过进行下一步",
+          "desc": "查看物料清单结果，确认是否需要发包\n运行工具，得出需要发包的结果表（如为空则无法发包，下个节点的空实例就必须进行）\n在网站进行辅料包的导入\nS2C转换（S2C状态为Success则转换成功）\n辅料包发布（状态从Publish变成空即可，Bpart页面的DC状态是已分配）",
+          "input": {
+            "text": "需要发包的物料清单",
+            "items": [
+              {
+                "id": "in_1792083281545_725",
+                "name": "物料清单",
+                "required": true,
+                "kind": "node",
+                "refId": "N010",
+                "refLabel": "物料清单制作",
+                "refFile": null
+              },
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              },
+              {
+                "id": "in_1792476492946_771",
+                "name": "合同表",
+                "required": false,
+                "kind": "checklist",
+                "refId": "C212526",
+                "refLabel": "合同信息表"
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "可直接导入CPQ 平台的Spart文件",
+            "files": [
+              {
+                "id": "out_1792132676096_794",
+                "name": "CPQ Spart导入模板.xlsx",
+                "path": "inputs/CPQ Spart导入模板.xlsx"
+              }
+            ],
+            "results": [
+              {
+                "name": "余量查询结果.xlsx",
+                "rel": "outputs/MRDN发包配置_20261104_164105_673786/余量查询结果.xlsx"
+              },
+              {
+                "name": "输出结果.xlsx",
+                "rel": "outputs/MRDN发包配置_20261104_164105_673786/输出结果.xlsx"
+              }
+            ]
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": {
+            "name": "MRDN发包配置.exe",
+            "config": [
+              {
+                "id": "input_template",
+                "itemId": "in_1792083281545_725"
+              },
+              {
+                "id": "output_template",
+                "itemId": "out_1792132676096_794"
+              },
+              {
+                "id": "contract_table",
+                "itemId": "in_1792476492946_771"
+              },
+              {
+                "id": "platform_cfg",
+                "itemId": "pf_pf_1792232826505"
+              }
+            ]
+          },
+          "files": [],
+          "tag": "data",
+          "urls": [
+            {
+              "name": "CPQ Spart导入",
+              "url": "https://cpq.mock-platform.example/isales/cpq/index/#/luban/siteDuManage/portal?projectCode=99Z0AAA&projectName=Mock%20Wireless%20Project&unistarTenantId=0&cardName=undefined&t=1&card=portal"
+            }
+          ],
+          "steps": [
+            {
+              "text": "查看物料清单结果，确认是否需要发包",
+              "shot": null
+            },
+            {
+              "text": "运行工具，得出需要发包的结果表（如为空则无法发包，下个节点的空实例就必须进行）",
+              "shot": null
+            },
+            {
+              "text": "在网站进行辅料包的导入",
+              "shot": "shots/shot_20261020_140447_144861.jpg"
+            },
+            {
+              "text": "S2C转换（S2C状态为Success则转换成功）",
+              "shot": null
+            },
+            {
+              "text": "辅料包发布（状态从Publish变成空即可，Bpart页面的DC状态是已分配）",
+              "shot": null
+            }
+          ],
+          "execMode": "batch",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "anchor": null,
+          "id": "N014",
+          "seq": 3
+        },
+        {
+          "name": "辅料配置推送",
+          "brief": "使用SmartMR系统进行辅料批量推送",
+          "desc": "生成Smart MR的模板上传文件（里面只装辅料：Type2、Type3的东西），填辅料发包的合同号\n导入Smart MR系统，提交进行辅料推送\n确定当前辅料所有数量全部满足，如不满足，选择其他项目进行配置，跳转到其他项目下进行配置\n回到CPQ发布实例，实例状态必须是已发布",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "in_ref_N010",
+                "name": "物料清单制作",
+                "required": true,
+                "kind": "node",
+                "refId": "N010",
+                "refLabel": "物料清单制作",
+                "refFile": null
+              },
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              },
+              {
+                "id": "in_1792567196968_277",
+                "name": "辅料包信息",
+                "required": true,
+                "kind": "node",
+                "refId": "N014",
+                "refLabel": "辅料包配置",
+                "refFile": "输出结果.xlsx"
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "Smart MR推送成功截图",
+            "files": [
+              {
+                "id": "out_1792570290011_789",
+                "name": "SmartMR模板.xlsx",
+                "path": "inputs/SmartMR模板.xlsx"
+              }
+            ],
+            "results": [
+              {
+                "name": "输出结果.xlsx",
+                "rel": "outputs/MRDN辅料发布_20261104_164304_605768/输出结果.xlsx"
+              }
+            ]
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": {
+            "name": "MRDN辅料发布.exe",
+            "config": [
+              {
+                "id": "material_list",
+                "itemId": "in_ref_N010"
+              },
+              {
+                "id": "smartmr_template",
+                "itemId": "out_1792570290011_789"
+              },
+              {
+                "id": "aux_pack",
+                "itemId": "in_1792567196968_277"
+              }
+            ]
+          },
+          "files": [],
+          "tag": "web",
+          "urls": [
+            {
+              "name": "SmartMR",
+              "url": "https://isdp.mock-platform.example/sdcloud/mrstatic/index.html#/smartMR?projectNumber=99Z0AAA"
+            }
+          ],
+          "steps": [
+            {
+              "text": "生成Smart MR的模板上传文件（里面只装辅料：Type2、Type3的东西），填辅料发包的合同号",
+              "shot": null
+            },
+            {
+              "text": "导入Smart MR系统，提交进行辅料推送",
+              "shot": null
+            },
+            {
+              "text": "确定当前辅料所有数量全部满足，如不满足，选择其他项目进行配置，跳转到其他项目下进行配置",
+              "shot": null
+            },
+            {
+              "text": "回到CPQ发布实例，实例状态必须是已发布",
+              "shot": null
+            }
+          ],
+          "execMode": "batch",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "anchor": null,
+          "id": "N012",
+          "seq": 4
+        },
+        {
+          "name": "辅料不满足检查",
+          "brief": "查询Smart推送界面，找出不满足的辅料进行查询，是在找不到的推送消息，求助供应经理处理",
+          "desc": "根据SmartMR提示的不满足信息，将不满足的辅料在任务锚点清单里进行标注\n将不满足的辅料清单发送给供应经理进行调配",
+          "input": {
+            "text": "不满足的物料信息",
+            "items": [
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "自动输出不满足的物料处理方案",
+            "files": [],
+            "results": []
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "tag": "web",
+          "urls": [],
+          "steps": [
+            {
+              "text": "根据SmartMR提示的不满足信息，将不满足的辅料在任务锚点清单里进行标注",
+              "shot": null
+            },
+            {
+              "text": "将不满足的辅料清单发送给供应经理进行调配",
+              "shot": null
+            }
+          ],
+          "execMode": "single",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "anchor": null,
+          "id": "N023",
+          "seq": 5
+        },
+        {
+          "name": "辅料MOS冻结",
+          "brief": "告知一线以下DUID站点的辅料需要进行MOS冻结",
+          "desc": "生成一线通知邮件，检查内容正确性\n向一线发送邮件以及welink进行通知\n定期查看是否已经冻结来进行下一步操作",
+          "input": {
+            "text": "需要MOS冻结的项目号、DUID、实例号，",
+            "items": [
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "告知一线的邮件与welink截图",
+            "files": [],
+            "results": []
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "tag": "notify",
+          "url": "",
+          "siteNote": "",
+          "dataCard": null,
+          "steps": [
+            {
+              "text": "生成一线通知邮件，检查内容正确性",
+              "shot": null
+            },
+            {
+              "text": "向一线发送邮件以及welink进行通知",
+              "shot": null
+            },
+            {
+              "text": "定期查看是否已经冻结来进行下一步操作",
+              "shot": null
+            }
+          ],
+          "execMode": "single",
+          "id": "N016",
+          "seq": 6
+        },
+        {
+          "name": "物料表一次检查更新",
+          "brief": "确认已冻结的配置与物料表最新配置是否一致",
+          "desc": "查看在线文档DU对应的版本是否相同",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              },
+              {
+                "id": "in_1793584440321_646",
+                "name": "首次物料清单",
+                "required": true,
+                "kind": "node",
+                "refId": "N010",
+                "refLabel": "物料清单制作",
+                "refFile": "输出结果.xlsx"
+              },
+              {
+                "id": "in_1793584501538_884",
+                "name": "物料类型表",
+                "required": true,
+                "kind": "checklist",
+                "refId": "C349413",
+                "refLabel": "物料类型表"
+              },
+              {
+                "id": "in_1793584517038_138",
+                "name": "最新物料设计表",
+                "required": true,
+                "kind": "file",
+                "file": null
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "物料清单一致性检查结果",
+            "files": [
+              {
+                "id": "out_1793584558735_730",
+                "name": "物料转置输出模板.xlsx",
+                "path": "inputs/物料转置输出模板.xlsx"
+              }
+            ],
+            "results": []
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": {
+            "name": "MRDN物料清单核查.exe",
+            "config": [
+              {
+                "id": "material_list",
+                "itemId": "in_1793584440321_646"
+              },
+              {
+                "id": "design_table",
+                "itemId": "in_1793584517038_138"
+              },
+              {
+                "id": "type_table",
+                "itemId": "in_1793584501538_884"
+              },
+              {
+                "id": "output_template",
+                "itemId": "out_1793584558735_730"
+              },
+              {
+                "id": "du_list",
+                "itemId": "__duid_list__"
+              }
+            ]
+          },
+          "files": [],
+          "tag": "",
+          "urls": [
+            {
+              "name": "EXP",
+              "url": "https://share.example.com/v/mocktoken00000000000001?type=0"
+            },
+            {
+              "name": "FTK",
+              "url": "https://share.example.com/v/mocktoken00000000000001?type=0"
+            }
+          ],
+          "steps": [
+            {
+              "text": "查看在线文档DU对应的版本是否相同",
+              "shot": null
+            }
+          ],
+          "execMode": "single",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "anchor": null,
+          "id": "N024",
+          "seq": 7
+        },
+        {
+          "name": "辅料挑料",
+          "brief": "",
+          "desc": "进行辅料挑料操作",
+          "input": {
+            "text": "进行辅料挑料操作",
+            "items": [
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "辅料挑料完成状态",
+            "files": [],
+            "results": []
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "tag": "",
+          "urls": [
+            {
+              "name": "管理MR",
+              "url": "https://isc.mock-platform.example/iscp/portal/#!/portal/iscp.ods.index/iscp.ods.delivery.mrList.index"
+            }
+          ],
+          "steps": [
+            {
+              "text": "进行辅料挑料操作",
+              "shot": null
+            }
+          ],
+          "execMode": "single",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "anchor": null,
+          "id": "N017",
+          "seq": 8
+        },
+        {
+          "name": "主设备配置",
+          "brief": "进行合同的匹配，数量满足、合同类型满足的可用合同",
+          "desc": "主设备库存查询\n主设备余量查询",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "主设备物料清单",
+            "files": [
+              {
+                "id": "out_1792598035854_480",
+                "name": "CPQ Spart导入模板.xlsx",
+                "path": "inputs/CPQ Spart导入模板.xlsx"
+              }
+            ],
+            "results": [
+              {
+                "name": "主设备不满足清单.xlsx",
+                "rel": "outputs/MRDN主设备查询_20261027_150520_186553/主设备不满足清单.xlsx"
+              },
+              {
+                "name": "主设备列表.xlsx",
+                "rel": "outputs/MRDN主设备查询_20261027_150520_186553/主设备列表.xlsx"
+              },
+              {
+                "name": "余量查询结果表.xlsx",
+                "rel": "outputs/MRDN主设备查询_20261027_150520_186553/余量查询结果表.xlsx"
+              },
+              {
+                "name": "库存查询结果表.xlsx",
+                "rel": "outputs/MRDN主设备查询_20261027_150520_186553/库存查询结果表.xlsx"
+              },
+              {
+                "name": "最终CPQ导入表.xlsx",
+                "rel": "outputs/MRDN主设备查询_20261027_150520_186553/最终CPQ导入表.xlsx"
+              }
+            ]
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "tag": "web",
+          "urls": [
+            {
+              "name": "CPQ平台",
+              "url": "https://cpq.mock-platform.example/isales/cpq/index/#/luban/siteDuManage/portal?projectCode=99Z0AAA&projectName=Mock%20Wireless%20Project&unistarTenantId=0&cardName=undefined&t=1&card=portal"
+            }
+          ],
+          "steps": [
+            {
+              "text": "主设备库存查询",
+              "shot": null
+            },
+            {
+              "text": "主设备余量查询",
+              "shot": null
+            }
+          ],
+          "execMode": "single",
+          "msgFilter": "type=Type 1",
+          "msgTemplate": "涉及主设备有如下 条目{DUID},类型为：{type} 数量为：{qty}",
+          "anchor": null,
+          "id": "N018",
+          "seq": 9
+        },
+        {
+          "name": "主设备MOS挂载",
+          "brief": "将已经准备好的主设备MR信息挂载在辅料MOS冻结上",
+          "desc": "主设备MOS挂载",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "in_1792139020298_763",
+                "name": "",
+                "required": false,
+                "kind": "node",
+                "refId": "N010",
+                "refLabel": "物料清单制作"
+              },
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "主设备挂载完成截图",
+            "files": [],
+            "results": []
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "tag": "web",
+          "url": "",
+          "siteNote": "",
+          "dataCard": null,
+          "steps": [
+            {
+              "text": "主设备MOS挂载",
+              "shot": null
+            }
+          ],
+          "execMode": "batch",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "id": "N019",
+          "seq": 10
+        },
+        {
+          "name": "主设备挑料",
+          "brief": "在平台上将主设备分配合同、数量、匹配方式等操作",
+          "desc": "选择FIFO匹配方式\n检查主设备物料的挑料合同和配置合同是否一致，且是否挑的是该合同下最老的物料\n检查那些没挑上的物料库存：看是否在其他项目下有库存（自己查），以及是否有替代关系（询问TD）\n检查物料匹配状态、匹配的物料是否和ML一致、挑料仓库是否满足要求、分包商是不是华为派送\n提交MR，提交后2min左右，去【查询出库单】中输入DUID查询，分别导出DN号头信息和详细单据，将用于回复邮件",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              },
+              {
+                "id": "in_1793584819958_952",
+                "name": "将未挑料的主设备进行标记，等库存余量符合条件后进行挑料",
+                "required": true,
+                "kind": "desc",
+                "refId": null,
+                "refLabel": null
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "主设备提交成功截图",
+            "files": [],
+            "results": []
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "tag": "web",
+          "urls": [
+            {
+              "name": "管理MR",
+              "url": "https://isc.mock-platform.example/iscp/portal/#!/portal/iscp.ods.index/iscp.ods.delivery.mrList.index"
+            }
+          ],
+          "steps": [
+            {
+              "text": "选择FIFO匹配方式",
+              "shot": null
+            },
+            {
+              "text": "检查主设备物料的挑料合同和配置合同是否一致，且是否挑的是该合同下最老的物料",
+              "shot": null
+            },
+            {
+              "text": "检查那些没挑上的物料库存：看是否在其他项目下有库存（自己查），以及是否有替代关系（询问TD）",
+              "shot": null
+            },
+            {
+              "text": "检查物料匹配状态、匹配的物料是否和ML一致、挑料仓库是否满足要求、分包商是不是华为派送",
+              "shot": null
+            },
+            {
+              "text": "提交MR，提交后2min左右，去【查询出库单】中输入DUID查询，分别导出DN号头信息和详细单据，将用于回复邮件",
+              "shot": null
+            }
+          ],
+          "execMode": "batch",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "anchor": null,
+          "id": "N020",
+          "seq": 11
+        },
+        {
+          "name": "物料清单检查",
+          "brief": "",
+          "desc": "导入最新物料检查",
+          "input": {
+            "text": "最新物料清单",
+            "items": [
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              },
+              {
+                "id": "in_1793153313383_876",
+                "name": "最新物料设计表",
+                "required": true,
+                "kind": "file",
+                "file": null
+              },
+              {
+                "id": "in_1793153467220_496",
+                "name": "物料类型",
+                "required": true,
+                "kind": "checklist",
+                "refId": "C349413",
+                "refLabel": "物料类型表"
+              },
+              {
+                "id": "in_1793156955367_161",
+                "name": "物料表（旧）",
+                "required": true,
+                "kind": "node",
+                "refId": "N010",
+                "refLabel": "物料清单制作",
+                "refFile": "输出结果.xlsx"
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "最新物料清单",
+            "files": [
+              {
+                "id": "out_1793153446006_842",
+                "name": "物料转置输出模板.xlsx",
+                "path": "inputs/物料转置输出模板.xlsx"
+              }
+            ],
+            "results": [
+              {
+                "name": "对比差异表.xlsx",
+                "rel": "outputs/MRDN物料清单核查_20261110_112933_002946/对比差异表.xlsx"
+              }
+            ]
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": {
+            "name": "MRDN物料清单核查.exe",
+            "config": [
+              {
+                "id": "material_list",
+                "itemId": "in_1793156955367_161"
+              },
+              {
+                "id": "design_table",
+                "itemId": "in_1793153313383_876"
+              },
+              {
+                "id": "type_table",
+                "itemId": "in_1793153467220_496"
+              },
+              {
+                "id": "output_template",
+                "itemId": "out_1793153446006_842"
+              },
+              {
+                "id": "du_list",
+                "itemId": "__duid_list__"
+              }
+            ]
+          },
+          "files": [],
+          "tag": "data",
+          "urls": [],
+          "dataCard": null,
+          "steps": [
+            {
+              "text": "导入最新物料检查",
+              "shot": null
+            }
+          ],
+          "execMode": "single",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "id": "N025",
+          "seq": 12
+        },
+        {
+          "name": "DN完结邮件",
+          "brief": "在MOS冻结邮件的基础上回复邮件，内容包括：@需求人；附上DN号头信息和详细单据附件",
+          "desc": "复制已经挑完料的DU，发送邮件。welink通知",
+          "input": {
+            "text": "",
+            "items": [
+              {
+                "id": "in_1792139808604_357",
+                "name": "",
+                "required": false,
+                "kind": "node",
+                "refId": "N020",
+                "refLabel": "主设备挑料"
+              },
+              {
+                "id": "__duid_list__",
+                "name": "DUID 清单（批次动态）",
+                "required": false,
+                "kind": "duidlist",
+                "refId": null,
+                "refLabel": null
+              }
+            ],
+            "refs": []
+          },
+          "output": {
+            "type": "text",
+            "text": "邮件、welink消息截图",
+            "files": [],
+            "results": []
+          },
+          "note": "",
+          "screenshot": null,
+          "tool": null,
+          "files": [],
+          "tag": "notify",
+          "url": "",
+          "siteNote": "",
+          "dataCard": null,
+          "steps": [
+            {
+              "text": "复制已经挑完料的DU，发送邮件。welink通知",
+              "shot": null
+            }
+          ],
+          "execMode": "single",
+          "msgFilter": "",
+          "msgTemplate": "",
+          "id": "N021",
+          "seq": 13
+        }
+      ],
+      "progress": {
+        "done": [
+          "N009",
+          "N010",
+          "N014",
+          "N015"
+        ]
+      },
+      "checklist": [
+        {
+          "id": "C212526",
+          "name": "合同信息表",
+          "desc": "",
+          "file": {
+            "name": "合同信息表.xlsx",
+            "path": "inputs/合同信息表.xlsx"
+          }
+        },
+        {
+          "id": "C349413",
+          "name": "物料类型表",
+          "desc": "匹配物料信息（长期可用，修改频次低）",
+          "file": {
+            "name": "物料类型表.xlsx",
+            "path": "inputs/物料类型表.xlsx"
+          }
+        },
+        {
+          "id": "C312688",
+          "name": "物料设计文档",
+          "desc": "上游制作的物料信息宽表",
+          "file": {
+            "name": "2025 EXP Material for configuration_MOCK.xlsx",
+            "path": "inputs/2025 EXP Material for configuration_MOCK.xlsx"
+          }
+        },
+        {
+          "id": "C231145",
+          "name": "物料设计表_exp",
+          "desc": "",
+          "file": {
+            "name": "物料设计表_exp.xlsx",
+            "path": "checklist_files/fMOCK001/CMOCKEXP/物料设计表_exp.xlsx"
+          },
+          "download": {
+            "type": "tool",
+            "tool": "物料设计表下载.exe",
+            "url": "https://share.example.com/v/mocktoken00000000000001?type=0",
+            "platformId": null,
+            "saveName": "物料设计表_exp.xlsx"
+          }
+        },
+        {
+          "id": "C379031",
+          "name": "物料设计表_ftk",
+          "desc": "",
+          "file": {
+            "name": "物料设计表_ftk.xlsx",
+            "path": "checklist_files/fMOCK001/CMOCKFTK/物料设计表_ftk.xlsx"
+          },
+          "download": {
+            "type": "tool",
+            "tool": "物料设计表下载.exe",
+            "url": "https://share.example.com/v/mocktoken00000000000002?type=0",
+            "platformId": null,
+            "saveName": "物料设计表_ftk.xlsx"
+          }
+        }
+      ],
+      "batches": [
+        {
+          "id": "B030",
+          "name": "Mock批次1",
+          "createdAt": "2026-11-10 09:00",
+          "tempFiles": {
+            "N022": {
+              "in_1792575889839_187": {
+                "name": "空实例列表.xlsx",
+                "path": "inputs/空实例列表.xlsx"
+              }
+            }
+          }
+        },
+        {
+          "id": "B035",
+          "name": "Mock批次2",
+          "createdAt": "2026-11-10 09:07"
+        },
+        {
+          "id": "B037",
+          "name": "Mock批次3",
+          "createdAt": "2026-11-10 09:14"
+        },
+        {
+          "id": "B039",
+          "name": "Mock批次4",
+          "createdAt": "2026-11-10 09:21"
+        }
+      ],
+      "workItems": [
+        {
+          "id": "W031",
+          "duid": "MOCKDU01_WL",
+          "batchId": "B030",
+          "sourceBatchId": null,
+          "remark": "mock",
+          "folder": "works/MOCKDU01_WL",
+          "doneStepIds": [
+            "N022",
+            "N009",
+            "N010",
+            "N014",
+            "N012",
+            "N023",
+            "N016",
+            "N024",
+            "N017",
+            "N018",
+            "N019",
+            "N020"
+          ],
+          "records": [
+            {
+              "seq": 4,
+              "stepId": "N022",
+              "stepName": "空实例配置",
+              "doneAt": "2026-11-10 08:00",
+              "files": [
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 1,
+              "stepId": "N009",
+              "stepName": "需求分析",
+              "doneAt": "2026-11-10 08:00",
+              "files": [
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 2,
+              "stepId": "N010",
+              "stepName": "物料清单制作",
+              "doneAt": "2026-11-10 08:00",
+              "files": [
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 3,
+              "stepId": "N014",
+              "stepName": "辅料包配置",
+              "doneAt": "2026-11-10 08:00",
+              "files": [
+                "余量查询结果.xlsx",
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 4,
+              "stepId": "N012",
+              "stepName": "辅料配置推送",
+              "doneAt": "2026-11-10 08:00",
+              "files": [
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 5,
+              "stepId": "N023",
+              "stepName": "辅料不满足检查",
+              "doneAt": "2026-11-10 08:00",
+              "files": []
+            },
+            {
+              "seq": 6,
+              "stepId": "N016",
+              "stepName": "辅料MOS冻结",
+              "doneAt": "2026-11-10 08:00",
+              "files": []
+            },
+            {
+              "seq": 7,
+              "stepId": "N024",
+              "stepName": "物料表一次检查更新",
+              "doneAt": "2026-11-10 08:00",
+              "files": []
+            },
+            {
+              "seq": 8,
+              "stepId": "N017",
+              "stepName": "辅料挑料",
+              "doneAt": "2026-11-10 08:00",
+              "files": []
+            },
+            {
+              "seq": 9,
+              "stepId": "N018",
+              "stepName": "主设备配置",
+              "doneAt": "2026-11-10 08:00",
+              "files": [
+                "主设备不满足清单.xlsx",
+                "主设备列表.xlsx",
+                "余量查询结果表.xlsx",
+                "库存查询结果表.xlsx",
+                "最终CPQ导入表.xlsx"
+              ]
+            },
+            {
+              "seq": 10,
+              "stepId": "N019",
+              "stepName": "主设备MOS挂载",
+              "doneAt": "2026-11-10 08:00",
+              "files": []
+            },
+            {
+              "seq": 11,
+              "stepId": "N020",
+              "stepName": "主设备挑料",
+              "doneAt": "2026-11-10 08:00",
+              "files": []
+            }
+          ],
+          "createdAt": "2026-10-26 15:18",
+          "updatedAt": "2026-11-11 09:35",
+          "tempFiles": {
+            "N025": {
+              "in_1793153313383_876": {
+                "name": "2025 EXP Material for configuration_MOCK.xlsx",
+                "path": "inputs/2025 EXP Material for configuration_MOCK.xlsx"
+              }
+            }
+          },
+          "materials": [
+            {
+              "itemcode": "99000008",
+              "done": true
+            },
+            {
+              "itemcode": "25030638",
+              "done": true
+            },
+            {
+              "itemcode": "25030695",
+              "done": true
+            },
+            {
+              "itemcode": "99000005",
+              "done": true
+            },
+            {
+              "itemcode": "25033535",
+              "done": true
+            },
+            {
+              "itemcode": "99000001",
+              "done": true
+            },
+            {
+              "itemcode": "04023275",
+              "done": true
+            },
+            {
+              "itemcode": "34060713",
+              "done": true
+            },
+            {
+              "itemcode": "14132649",
+              "done": true
+            },
+            {
+              "itemcode": "27150120",
+              "done": true
+            },
+            {
+              "itemcode": "04130700",
+              "done": true
+            },
+            {
+              "itemcode": "02232PAP",
+              "done": true
+            },
+            {
+              "itemcode": "99000007",
+              "done": true
+            },
+            {
+              "itemcode": "02237428",
+              "done": true
+            }
+          ]
+        },
+        {
+          "id": "W036",
+          "duid": "MOCKDU02_WL",
+          "batchId": "B035",
+          "sourceBatchId": null,
+          "remark": "mock",
+          "folder": "works/MOCKDU02_WL",
+          "doneStepIds": [
+            "N009",
+            "N010",
+            "N014",
+            "N022",
+            "N012",
+            "N023",
+            "N016"
+          ],
+          "records": [
+            {
+              "seq": 1,
+              "stepId": "N009",
+              "stepName": "需求分析",
+              "doneAt": "2026-11-10 08:11",
+              "files": [
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 2,
+              "stepId": "N010",
+              "stepName": "物料清单制作",
+              "doneAt": "2026-11-10 08:11",
+              "files": [
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 3,
+              "stepId": "N014",
+              "stepName": "辅料包配置",
+              "doneAt": "2026-11-10 08:11",
+              "files": [
+                "余量查询结果.xlsx",
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 4,
+              "stepId": "N022",
+              "stepName": "空实例配置",
+              "doneAt": "2026-11-10 08:11",
+              "files": [
+                "空实例列表.xlsx",
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 5,
+              "stepId": "N012",
+              "stepName": "辅料配置推送",
+              "doneAt": "2026-11-10 08:11",
+              "files": [
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 6,
+              "stepId": "N023",
+              "stepName": "辅料不满足检查",
+              "doneAt": "2026-11-10 08:11",
+              "files": []
+            },
+            {
+              "seq": 7,
+              "stepId": "N016",
+              "stepName": "辅料MOS冻结",
+              "doneAt": "2026-11-10 08:11",
+              "files": []
+            }
+          ],
+          "createdAt": "2026-11-02 13:35",
+          "updatedAt": "2026-11-04 16:29",
+          "tempFiles": {
+            "N022": {
+              "in_1792575889839_187": {
+                "name": "空实例列表.xlsx",
+                "path": "inputs/空实例列表.xlsx"
+              }
+            }
+          },
+          "materials": [
+            {
+              "itemcode": "99000001",
+              "done": true
+            },
+            {
+              "itemcode": "04023275",
+              "done": true
+            },
+            {
+              "itemcode": "34060713",
+              "done": true
+            },
+            {
+              "itemcode": "14130646",
+              "done": true
+            },
+            {
+              "itemcode": "27150086",
+              "done": true
+            },
+            {
+              "itemcode": "04133533-002",
+              "done": true
+            },
+            {
+              "itemcode": "02232PAP",
+              "done": true
+            },
+            {
+              "itemcode": "29080387",
+              "done": true
+            },
+            {
+              "itemcode": "02237428",
+              "done": true
+            },
+            {
+              "itemcode": "99000003",
+              "done": true
+            },
+            {
+              "itemcode": "99000005",
+              "done": true
+            },
+            {
+              "itemcode": "25033534",
+              "done": true
+            },
+            {
+              "itemcode": "04133533-005",
+              "done": false
+            },
+            {
+              "itemcode": "99000002",
+              "done": true
+            },
+            {
+              "itemcode": "99000006",
+              "done": true
+            },
+            {
+              "itemcode": "99000004",
+              "done": true
+            }
+          ]
+        },
+        {
+          "id": "W038",
+          "duid": "MOCKDU03_WL",
+          "batchId": "B037",
+          "sourceBatchId": null,
+          "remark": "mock",
+          "folder": "works/MOCKDU03_WL",
+          "doneStepIds": [],
+          "records": [],
+          "materials": [
+            {
+              "itemcode": "99000001",
+              "done": true
+            },
+            {
+              "itemcode": "25030638",
+              "done": true
+            },
+            {
+              "itemcode": "25030695",
+              "done": true
+            },
+            {
+              "itemcode": "99000005",
+              "done": true
+            },
+            {
+              "itemcode": "34060599",
+              "done": true
+            },
+            {
+              "itemcode": "04023275",
+              "done": true
+            },
+            {
+              "itemcode": "34061618-001",
+              "done": true
+            },
+            {
+              "itemcode": "14130645",
+              "done": true
+            },
+            {
+              "itemcode": "27150086",
+              "done": true
+            },
+            {
+              "itemcode": "25033534",
+              "done": true
+            },
+            {
+              "itemcode": "02232PAP",
+              "done": true
+            },
+            {
+              "itemcode": "29080304",
+              "done": true
+            },
+            {
+              "itemcode": "03058707",
+              "done": true
+            },
+            {
+              "itemcode": "02313CKC",
+              "done": true
+            },
+            {
+              "itemcode": "52236962",
+              "done": true
+            },
+            {
+              "itemcode": "52236958",
+              "done": true
+            },
+            {
+              "itemcode": "16021480",
+              "status": "缺料"
+            },
+            {
+              "itemcode": "99000002",
+              "status": "缺余量"
+            },
+            {
+              "itemcode": "29080299",
+              "status": "等CRF"
+            },
+            {
+              "itemcode": "123456",
+              "remark": "16021480 * 2"
+            }
+          ],
+          "createdAt": "2026-11-03 14:32",
+          "updatedAt": "2026-11-04 11:00",
+          "tempFiles": {
+            "N022": {
+              "in_1792575889839_187": {
+                "name": "空实例列表.xlsx",
+                "path": "inputs/空实例列表.xlsx"
+              }
+            },
+            "N025": {
+              "in_1793153313383_876": {
+                "name": "2025 EXP Material for configuration_MOCK.xlsx",
+                "path": "inputs/2025 EXP Material for configuration_MOCK.xlsx"
+              }
+            }
+          }
+        },
+        {
+          "id": "W040",
+          "duid": "MOCKDU04_WL",
+          "batchId": "B039",
+          "sourceBatchId": null,
+          "remark": "mock",
+          "folder": "works/MOCKDU04_WL",
+          "doneStepIds": [],
+          "records": [],
+          "createdAt": "2026-11-04 16:38",
+          "updatedAt": "2026-11-04 16:42",
+          "materials": []
+        },
+        {
+          "id": "W041",
+          "duid": "MOCKDU05_WL",
+          "batchId": "B039",
+          "sourceBatchId": null,
+          "remark": "mock",
+          "folder": "works/MOCKDU05_WL",
+          "doneStepIds": [
+            "N009",
+            "N010",
+            "N014",
+            "N022",
+            "N012",
+            "N023",
+            "N016",
+            "N024",
+            "N017",
+            "N018",
+            "N019"
+          ],
+          "records": [
+            {
+              "seq": 5,
+              "stepId": "N012",
+              "stepName": "辅料配置推送",
+              "doneAt": "2026-11-10 08:44",
+              "files": [
+                "输出结果.xlsx"
+              ]
+            },
+            {
+              "seq": 5,
+              "stepId": "N023",
+              "stepName": "辅料不满足检查",
+              "doneAt": "2026-11-10 08:44",
+              "files": []
+            },
+            {
+              "seq": 6,
+              "stepId": "N016",
+              "stepName": "辅料MOS冻结",
+              "doneAt": "2026-11-10 08:44",
+              "files": []
+            },
+            {
+              "seq": 7,
+              "stepId": "N024",
+              "stepName": "物料表一次检查更新",
+              "doneAt": "2026-11-10 08:44",
+              "files": []
+            },
+            {
+              "seq": 8,
+              "stepId": "N017",
+              "stepName": "辅料挑料",
+              "doneAt": "2026-11-10 08:44",
+              "files": []
+            },
+            {
+              "seq": 9,
+              "stepId": "N018",
+              "stepName": "主设备配置",
+              "doneAt": "2026-11-10 08:44",
+              "files": [
+                "主设备不满足清单.xlsx",
+                "主设备列表.xlsx",
+                "余量查询结果表.xlsx",
+                "库存查询结果表.xlsx",
+                "最终CPQ导入表.xlsx"
+              ]
+            },
+            {
+              "seq": 10,
+              "stepId": "N019",
+              "stepName": "主设备MOS挂载",
+              "doneAt": "2026-11-10 08:44",
+              "files": []
+            }
+          ],
+          "createdAt": "2026-11-04 16:38",
+          "updatedAt": "2026-11-11 09:12",
+          "materials": [
+            {
+              "itemcode": "99000004",
+              "done": false
+            },
+            {
+              "itemcode": "99000005",
+              "done": false
+            },
+            {
+              "itemcode": "25033534",
+              "done": false
+            },
+            {
+              "itemcode": "99000001",
+              "done": false
+            },
+            {
+              "itemcode": "04023275",
+              "done": false
+            },
+            {
+              "itemcode": "34060713",
+              "done": false
+            },
+            {
+              "itemcode": "14130645",
+              "done": false
+            },
+            {
+              "itemcode": "27150086",
+              "done": false
+            },
+            {
+              "itemcode": "04133533-002",
+              "done": false
+            },
+            {
+              "itemcode": "04133533-005",
+              "done": false
+            },
+            {
+              "itemcode": "02232PAP",
+              "done": false
+            },
+            {
+              "itemcode": "29080387",
+              "done": false
+            },
+            {
+              "itemcode": "02237428",
+              "done": false
+            },
+            {
+              "itemcode": "99000002",
+              "done": false
+            },
+            {
+              "itemcode": "99000003",
+              "done": false
+            },
+            {
+              "itemcode": "99000006",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "prep": {
+        "text": "",
+        "duids": [],
+        "inputItems": [],
+        "tools": [
+          {
+            "id": "pt_1793437464542_455",
+            "name": "MockMainTool.exe",
+            "config": [
+              {
+                "id": "itemcodes",
+                "itemId": "__itemcode_list__"
+              },
+              {
+                "id": "contract_table",
+                "itemId": "cl_C212526"
+              },
+              {
+                "id": "isc_cfg",
+                "itemId": "pf_pf_1793861373339"
+              },
+              {
+                "id": "cpq_cfg",
+                "itemId": "pf_pf_1792232826505"
+              }
+            ]
+          }
+        ]
+      },
+      "materialStatusOptions": [
+        "缺料",
+        "缺余量",
+        "等CRF",
+        "无料",
+        "等货",
+        "其他"
+      ]
+    }
+  ],
+  "platforms": [
+    {
+      "id": "pf_1792232826505",
+      "name": "CPQ",
+      "url": "https://cpq.mock-platform.example/isales/cpq/index/#/luban/siteDuManage/portal?projectCode=99Z0AAA&projectName=Mock%20Wireless%20Project",
+      "headers": {
+        "Cookie": "MOCK_JSESSIONID=00000000000000000000000000000000; MOCK_SSO_TOKEN=MOCKTOKEN00000000000000000000000000; MOCK_HWSO_LOGIN=MOCKHWSO0000000000; lang=zh; userId=999999999999999",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+      },
+      "updatedAt": "2026-11-10 00:00"
+    },
+    {
+      "id": "pf_1793861373339",
+      "name": "ISC",
+      "url": "https://isc.mock-platform.example/iscp/portal/#!/portal/iscp.ods.index/iscp.ods.delivery.mrList.index",
+      "headers": {
+        "Cookie": "MOCK_JSESSIONID=00000000000000000000000000000000; MOCK_SSO_TOKEN=MOCKTOKEN01000000000000000000000000; MOCK_HWSO_LOGIN=MOCKHWSO0000000000; lang=zh; userId=999999999999999",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+      },
+      "updatedAt": "2026-11-10 00:00"
+    }
+  ]
+}

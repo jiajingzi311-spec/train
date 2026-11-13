@@ -1,0 +1,11 @@
+{
+  "name": "CPQ",
+  "url": "https://cpq.mock-platform.example/isales/cpq/index/#/luban/siteDuManage/portal?projectCode=99Z0AAA&projectName=Mock%20Wireless%20Project",
+  "method": "GET",
+  "headers": {
+    "Cookie": "MOCK_JSESSIONID=00000000000000000000000000000000; MOCK_SSO_TOKEN=MOCKTOKEN; MOCK_HWSO_LOGIN=MOCKHWSO; userId=999999999999999",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+  },
+  "cookie": "MOCK_JSESSIONID=00000000000000000000000000000000; MOCK_SSO_TOKEN=MOCKTOKEN; MOCK_HWSO_LOGIN=MOCKHWSO; userId=999999999999999",
+  "updatedAt": "2026-11-10 00:00"
+}
