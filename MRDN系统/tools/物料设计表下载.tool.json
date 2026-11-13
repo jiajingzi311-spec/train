@@ -1,0 +1,12 @@
+{
+  "name": "物料设计表下载.exe",
+  "display": "物料设计表下载",
+  "version": "1.0.0",
+  "note": "从企业网盘分享链接（/v/xxx 或 /p/xxx）下载文件到输出目录。账号密码从本地配置文件读取（首次使用需填写一次，示例见 tools/onebox_config.example.json）。",
+  "inputs": [
+    {"id": "url", "label": "企业网盘分享链接", "type": "text", "required": true}
+  ],
+  "outputs": [
+    {"id": "file", "label": "下载的文件", "file": "下载文件.xlsx"}
+  ]
+}
