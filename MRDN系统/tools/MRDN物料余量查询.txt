@@ -1,0 +1,43 @@
+﻿物料余量查询 v1 规则说明
+================================
+
+【输入】
+1. itemcode 清单（txt，每行一个，必填）
+2. 合同信息表（xlsx，含 Contract No. / Sub 列，必填）
+3. ISC 平台凭证（JSON，含 Cookie，必填）
+4. CPQ 平台凭证（JSON，含 Cookie，必填）
+
+【合同表筛选】
+5. 只保留 Sub 属于 EOS / EXP / FTK / NSB / Small Cell 的行
+
+【ISC 库存查询】
+6. 接口 findOnhandDetailList，pageSize=500，entityId=9999
+7. 逐 itemcode 查询，间隔 2 秒，支持翻页
+
+【ISC 记录筛选（全部满足才保留）】
+8. entityId == 9999
+9. Warehouse 属于 MOCK_WH_A / MOCK_WH_B
+10. Project Code 属于 99Z0AAA / 99Z0BBB / 99Z0CCC / 99Z0DDD / 99Z0EEE
+11. Item == 当前 itemcode
+12. Avi Qty（actQty）> 0
+13. Contract 非空
+14. qualityTypeDesc 不等于 Damaged
+15. subInv 不等于 MOCK_WH_C
+
+【CPQ 余量查询】
+16. 接口 getContractRemainInfo，批量查，每批 100 个合同号
+17. pageSize=150，salesTypes=[1,3,4,5]，remainQty=[1]
+18. 返回按 itemcode + contract 归组，间隔 2 秒
+
+【汇集】
+19. 每条 ISC 记录（筛选后）单独出一行，不做 itemcode+contract 去重
+20. ISC 每条记录保留自己的 goodsAge / Avi Qty，不做「取最大」合并
+21. CPQ 多条取余量（remainQty）最大
+22. 产品编码 = CPQ 的 financialCode
+
+【排序】
+23. 相同 itemcode 连续挨在一起，组间按输入顺序
+24. 组内 goodsAge → Avi Qty → 余量 降序
+
+【输出】
+25. 输出 9 列：itemcode / goodsAge / Avi Qty / Sub / contractNumber / 余量 / Project Code / Erp.org / 产品编码

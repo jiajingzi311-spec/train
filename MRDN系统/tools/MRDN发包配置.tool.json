@@ -1,0 +1,15 @@
+{
+  "name": "MRDN发包配置.exe",
+  "display": "MRDN 发包配置",
+  "duid_param": "duid",
+  "inputs": [
+    {"id": "input_template", "label": "输入模板（发包配置：含「发包标签」列的物料表）", "type": "excel", "required": false},
+    {"id": "output_template", "label": "输出模板（发包配置：Spart Configuration 表头）", "type": "excel", "required": false},
+    {"id": "contract_table", "label": "合同表（合同余量查询：含 Project Code / Sub / Contract No.）", "type": "excel", "required": false},
+    {"id": "platform_cfg", "label": "平台凭证（关联到 CPQ 平台凭证，系统自动传 Cookie）", "type": "platform", "required": false}
+  ],
+  "outputs": [
+    {"id": "result", "label": "输出结果", "file": "输出结果.xlsx"},
+    {"id": "remain", "label": "余量查询结果", "file": "余量查询结果.xlsx"}
+  ]
+}

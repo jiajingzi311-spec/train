@@ -1,0 +1,12 @@
+{
+  "name": "MRDNDU分析.exe",
+  "display": "MRDN DU 分析",
+  "duid_param": "duid",
+  "inputs": [
+    {"id": "du_list", "label": "DUID 清单（关联到系统「DUID 清单」输入项）", "type": "excel", "required": true},
+    {"id": "output_template", "label": "输出模板", "type": "excel", "required": false}
+  ],
+  "outputs": [
+    {"id": "result", "label": "输出结果", "file": "输出结果.xlsx"}
+  ]
+}

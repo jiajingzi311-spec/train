@@ -1,0 +1,15 @@
+{
+  "name": "MRDN物料余量查询.exe",
+  "display": "MRDN 物料余量查询",
+  "version": "1.0.0",
+  "note": "首版：ISC 查库存 → CPQ 查余量 → 汇集 9 列表。合同表必填，Sub=EOS/EXP/FTK/NSB/Small Cell，actQty>0，排序按 item 分组 + 组内 goodsAge→Avi Qty→余量 降序。",
+  "inputs": [
+    {"id": "itemcodes", "label": "itemcode 清单", "type": "text", "required": true},
+    {"id": "contract_table", "label": "合同信息表", "type": "excel", "required": true},
+    {"id": "isc_cfg", "label": "ISC平台凭证", "type": "platform", "required": true},
+    {"id": "cpq_cfg", "label": "CPQ平台凭证", "type": "platform", "required": true}
+  ],
+  "outputs": [
+    {"id": "result", "label": "物料余量查询结果", "file": "物料余量查询结果.xlsx"}
+  ]
+}
