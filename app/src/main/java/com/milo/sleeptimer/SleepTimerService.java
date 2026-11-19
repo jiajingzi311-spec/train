@@ -29,6 +29,7 @@ public class SleepTimerService extends AccessibilityService {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private long endTime = 0L;
+    private long totalMs = 0L;
 
     private final Runnable fireRunnable = new Runnable() {
         @Override
@@ -41,7 +42,7 @@ public class SleepTimerService extends AccessibilityService {
         @Override
         public void run() {
             Toast.makeText(SleepTimerService.this,
-                    "睡前定时：1 分钟后将自动退出视频并熄屏", Toast.LENGTH_LONG).show();
+                    "🌙 还有 1 分钟就帮你熄屏啦，困了就睡吧～", Toast.LENGTH_LONG).show();
         }
     };
 
@@ -104,6 +105,7 @@ public class SleepTimerService extends AccessibilityService {
     public void startTimer(long durationMs) {
         cancelTimer();
         endTime = System.currentTimeMillis() + durationMs;
+        totalMs = durationMs;
         handler.postDelayed(fireRunnable, durationMs);
         if (durationMs > WARN_BEFORE_MS) {
             handler.postDelayed(warnRunnable, durationMs - WARN_BEFORE_MS);
@@ -114,6 +116,21 @@ public class SleepTimerService extends AccessibilityService {
         handler.removeCallbacks(fireRunnable);
         handler.removeCallbacks(warnRunnable);
         endTime = 0L;
+    }
+
+    /** 在当前倒计时基础上再加一段时间 */
+    public void extendTimer(long extraMs) {
+        if (endTime == 0L) {
+            return;
+        }
+        long left = Math.max(0L, endTime - System.currentTimeMillis());
+        long newTotal = totalMs + extraMs;
+        startTimer(left + extraMs);
+        totalMs = newTotal;
+    }
+
+    public long getTotalMs() {
+        return totalMs;
     }
 
     /** 0 表示没有在倒计时 */

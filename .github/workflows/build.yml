@@ -21,21 +21,22 @@ jobs:
       - name: Build debug APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleRelease --no-daemon --stacktrace
 
       - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk SleepTimer.apk
+        run: cp app/build/outputs/apk/release/app-release.apk GoodNightMoon.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: SleepTimer-apk
-          path: SleepTimer.apk
+          name: GoodNightMoon-apk
+          path: GoodNightMoon.apk
 
       - name: Publish release (direct download link)
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: sleep-timer-v1
-          name: 睡前定时熄屏 v1
+          tag_name: moon-v${{ github.run_number }}
+          name: 晚安小月亮 v${{ github.run_number }}
           target_commitish: ${{ github.sha }}
-          body: 手机上点下面的 SleepTimer.apk 直接下载安装。
-          files: SleepTimer.apk
+          body: 手机上点下面的 GoodNightMoon.apk 直接下载安装。
+          make_latest: true
+          files: GoodNightMoon.apk
