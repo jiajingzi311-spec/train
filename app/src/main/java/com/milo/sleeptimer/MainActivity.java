@@ -236,7 +236,8 @@ public class MainActivity extends Activity {
         help.addView(helpToggle);
         helpBody = text("· 选好时间点「开始守护」，然后去刷视频就好\n"
                 + "· 到点前 1 分钟会提醒，想继续看就回来点「再看 10 分钟」\n"
-                + "· 到点后会自动：暂停 → 退出视频 → 回桌面 → 熄屏\n"
+                + "· 到点后会自动：停止播放（直播也会停）→ 退出 → 回桌面 → 熄屏\n"
+                + "· 为了直播小窗也没声音，熄屏时会把媒体音量调成 0，下次解锁手机自动恢复\n"
                 + "· 守护期间下拉通知栏能看到剩余时间\n"
                 + "· 自己按了锁屏键，守护会自动取消\n\n"
                 + "小米手机请再设置一下，不然小月亮可能会被系统关掉：\n"
@@ -280,6 +281,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        SleepTimerService.restoreVolume(this);
         handler.post(ticker);
     }
 
