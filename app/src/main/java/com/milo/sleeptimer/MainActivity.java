@@ -236,7 +236,7 @@ public class MainActivity extends Activity {
         help.addView(helpToggle);
         helpBody = text("· 选好时间点「开始守护」，然后去刷视频就好\n"
                 + "· 到点前 1 分钟会提醒，想继续看就回来点「再看 10 分钟」\n"
-                + "· 到点后会自动：停止播放（直播也会停）→ 退出 → 回桌面 → 熄屏\n"
+                + "· 到点后会自动：停止播放 → 退出 → 回桌面 → 关掉直播小窗 → 熄屏\n"
                 + "· 为了直播小窗也没声音，熄屏时会把媒体音量调成 0，下次解锁手机自动恢复\n"
                 + "· 守护期间下拉通知栏能看到剩余时间\n"
                 + "· 自己按了锁屏键，守护会自动取消\n\n"
@@ -263,7 +263,7 @@ public class MainActivity extends Activity {
         helpLp.topMargin = dp(28);
         col.addView(help, helpLp);
 
-        TextView footer = text("不读取屏幕内容 · 不联网 · 只为让你睡个好觉 💤", 11, TEXT_DIM, false);
+        TextView footer = text("不联网 · 只在到点时关小窗 · 只为让你睡个好觉 💤", 11, TEXT_DIM, false);
         footer.setPadding(0, dp(18), 0, 0);
         col.addView(footer);
 

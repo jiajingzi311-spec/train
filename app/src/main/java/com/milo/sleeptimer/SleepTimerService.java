@@ -12,9 +12,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.accessibility.AccessibilityWindowInfo;
+
+import java.util.ArrayDeque;
+import java.util.List;
 
 /**
- * 无障碍服务：只负责“动手”——暂停、返回、回桌面、锁屏。
+ * 无障碍服务：只负责“动手”——暂停、返回、回桌面、关掉视频小窗、锁屏。
  * 什么时候动手由 TimerController 用系统闹钟决定。
  */
 public class SleepTimerService extends AccessibilityService {
@@ -116,12 +121,25 @@ public class SleepTimerService extends AccessibilityService {
                 performGlobalAction(GLOBAL_ACTION_HOME);
             }
         }, 1100);
+        // 回到桌面后，微信直播常会变成小窗继续播 → 找到小窗的“关闭”按钮点掉（试两次，等动画结束）
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                closeFloatingWindows();
+            }
+        }, 1900);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                closeFloatingWindows();
+            }
+        }, 2700);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN);
             }
-        }, 2000);
+        }, 3300);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -130,7 +148,102 @@ public class SleepTimerService extends AccessibilityService {
                     onDone.run();
                 }
             }
-        }, 2800);
+        }, 4000);
+    }
+
+    /** 只看会留小窗的视频 App（微信等）的窗口，找到“关闭”按钮就点 */
+    private static final String[] FLOAT_APPS = {
+            "com.tencent.mm",            // 微信（视频号 / 直播）
+            "com.ss.android.ugc.aweme",  // 抖音
+            "com.smile.gifmaker",        // 快手
+    };
+
+    private void closeFloatingWindows() {
+        List<AccessibilityWindowInfo> windows;
+        try {
+            windows = getWindows();
+        } catch (Exception e) {
+            return;
+        }
+        if (windows == null) {
+            return;
+        }
+        for (AccessibilityWindowInfo w : windows) {
+            AccessibilityNodeInfo root;
+            try {
+                root = w.getRoot();
+            } catch (Exception e) {
+                continue;
+            }
+            if (root == null || root.getPackageName() == null) {
+                continue;
+            }
+            if (!isFloatApp(root.getPackageName().toString())) {
+                continue;
+            }
+            AccessibilityNodeInfo close = findCloseButton(root);
+            if (close != null) {
+                clickNodeOrParent(close);
+            }
+        }
+    }
+
+    private static boolean isFloatApp(String pkg) {
+        for (String p : FLOAT_APPS) {
+            if (p.equals(pkg)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static AccessibilityNodeInfo findCloseButton(AccessibilityNodeInfo root) {
+        ArrayDeque<AccessibilityNodeInfo> queue = new ArrayDeque<>();
+        queue.add(root);
+        int guard = 0;
+        while (!queue.isEmpty() && guard++ < 400) {
+            AccessibilityNodeInfo n = queue.poll();
+            if (n == null) {
+                continue;
+            }
+            if (looksLikeClose(n)) {
+                return n;
+            }
+            for (int i = 0; i < n.getChildCount(); i++) {
+                AccessibilityNodeInfo c = n.getChild(i);
+                if (c != null) {
+                    queue.add(c);
+                }
+            }
+        }
+        return null;
+    }
+
+    private static boolean looksLikeClose(AccessibilityNodeInfo n) {
+        String desc = n.getContentDescription() == null ? "" : n.getContentDescription().toString();
+        String text = n.getText() == null ? "" : n.getText().toString();
+        String id = n.getViewIdResourceName() == null ? "" : n.getViewIdResourceName().toLowerCase();
+        String label = (desc + "|" + text).trim();
+        if (label.contains("关闭") || label.contains("退出直播") || label.contains("结束播放")) {
+            return true;
+        }
+        if (text.equals("×") || text.equals("✕") || desc.equalsIgnoreCase("close")) {
+            return true;
+        }
+        return id.endsWith("/close") || id.contains("close_btn") || id.contains("btn_close")
+                || id.contains("float_close") || id.contains("close_icon") || id.contains("iv_close");
+    }
+
+    private static void clickNodeOrParent(AccessibilityNodeInfo n) {
+        AccessibilityNodeInfo cur = n;
+        for (int i = 0; i < 4 && cur != null; i++) {
+            if (cur.isClickable()) {
+                cur.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                return;
+            }
+            cur = cur.getParent();
+        }
+        n.performAction(AccessibilityNodeInfo.ACTION_CLICK);
     }
 
     private void grabAudioFocus() {
