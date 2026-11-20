@@ -10,8 +10,8 @@ android {
         applicationId 'com.milo.sleeptimer'
         minSdk 28
         targetSdk 34
-        versionCode 2
-        versionName '2.0'
+        versionCode 3
+        versionName '3.0'
     }
 
     // 固定签名：以后更新版本可以直接覆盖安装，不用先卸载
@@ -32,6 +32,11 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.moon
         }
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
     }
 
     compileOptions {

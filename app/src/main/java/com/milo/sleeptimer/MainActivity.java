@@ -3,12 +3,14 @@ package com.milo.sleeptimer;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -205,11 +207,8 @@ public class MainActivity extends Activity {
         extendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SleepTimerService svc = SleepTimerService.getInstance();
-                if (svc != null) {
-                    svc.extendTimer(10 * 60_000L);
-                    toast("好～再陪你 10 分钟");
-                }
+                TimerController.extend(MainActivity.this, 10 * 60_000L);
+                toast("好～再陪你 10 分钟");
                 refresh();
             }
         });
@@ -219,10 +218,7 @@ public class MainActivity extends Activity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SleepTimerService svc = SleepTimerService.getInstance();
-                if (svc != null) {
-                    svc.cancelTimer();
-                }
+                TimerController.cancel(MainActivity.this);
                 refresh();
             }
         });
@@ -241,6 +237,7 @@ public class MainActivity extends Activity {
         helpBody = text("· 选好时间点「开始守护」，然后去刷视频就好\n"
                 + "· 到点前 1 分钟会提醒，想继续看就回来点「再看 10 分钟」\n"
                 + "· 到点后会自动：暂停 → 退出视频 → 回桌面 → 熄屏\n"
+                + "· 守护期间下拉通知栏能看到剩余时间\n"
                 + "· 自己按了锁屏键，守护会自动取消\n\n"
                 + "小米手机请再设置一下，不然小月亮可能会被系统关掉：\n"
                 + "1. 设置 → 应用设置 → 晚安小月亮 → 省电策略 → 无限制\n"
@@ -271,6 +268,13 @@ public class MainActivity extends Activity {
 
         setContentView(root);
         refresh();
+
+        // 安卓 13 以上要允许通知，才能在通知栏看到倒计时
+        if (Build.VERSION.SDK_INT >= 33
+                && checkSelfPermission("android.permission.POST_NOTIFICATIONS")
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 1);
+        }
     }
 
     @Override
@@ -291,13 +295,12 @@ public class MainActivity extends Activity {
     }
 
     private void start(int minutes) {
-        SleepTimerService svc = SleepTimerService.getInstance();
-        if (svc == null) {
+        if (!TimerController.isAccessibilityEnabled(this)) {
             toast("先开启一下小月亮的权限哦");
             openAccessibilitySettings();
             return;
         }
-        svc.startTimer(minutes * 60_000L);
+        TimerController.start(this, minutes * 60_000L);
         prefs.edit().putInt("last_minutes", minutes).apply();
         toast("🌙 " + minutes + " 分钟后帮你关掉，安心刷吧～");
         refresh();
@@ -305,16 +308,15 @@ public class MainActivity extends Activity {
     }
 
     private void refresh() {
-        SleepTimerService svc = SleepTimerService.getInstance();
-        boolean enabled = svc != null;
+        boolean enabled = TimerController.isAccessibilityEnabled(this);
         permissionCard.setVisibility(enabled ? View.GONE : View.VISIBLE);
 
-        long end = enabled ? svc.getEndTime() : 0L;
+        long end = TimerController.getEndTime(this);
         long left = end - System.currentTimeMillis();
         boolean running = end > 0 && left > 0;
 
         if (running) {
-            long total = Math.max(1L, svc.getTotalMs());
+            long total = Math.max(1L, TimerController.getTotalMs(this));
             long sec = (left + 999) / 1000;
             String time = String.format(Locale.US, "%02d:%02d", sec / 60, sec % 60);
             ring.setState((float) left / total, time, "后帮你熄屏");
